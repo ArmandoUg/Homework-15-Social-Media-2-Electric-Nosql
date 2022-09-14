@@ -28,13 +28,24 @@ router.post('/', async (req,res)=> {
 });
 
 //TODO: ROUTE TO GET SINGLE THOUGHT BASED ON THOUGHT ID
-router.get('/:thoughtId', (req,res)=> {
-
-})
+router.get('/:thoughtId', async (req,res)=> {
+try{
+    let thoughtData = await Thought.findOne({_id: req.params.thoughtId})
+    res.status(200).json(thoughtData)
+}
+catch(err){
+    res.status(500).json(err)
+}
 
 //TODO: ROUTE TO UPDATE A THOUGHT
-router.put('/', (req,res)=> {
-
+router.put('/', async(req,res)=> {
+    try{
+        let thoughtData = await Thought.updateOne({_id: req.params.thoughtId}, {$set: req.body})
+        res.status(200).json(thoughtData)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
 })
 
 //TODO: ROUTE TO DELETE A THOUGHT BASED ON THOUGHT ID
