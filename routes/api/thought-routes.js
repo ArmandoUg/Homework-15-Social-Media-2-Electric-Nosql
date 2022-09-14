@@ -39,7 +39,7 @@ catch(err){
 });
 
 //TODO: ROUTE TO UPDATE A THOUGHT
-router.put('/', async(req,res)=> {
+router.put('/:thoughtId', async(req,res)=> {
     try{
         let thoughtData = await Thought.updateOne({_id: req.params.thoughtId}, {$set: req.body})
         res.status(200).json(thoughtData)
@@ -63,9 +63,17 @@ router.delete('/:thoughtId',async (req,res)=> {
 //TODO: ROUTE TO ADD REACTION TO A THOUGHT
 router.post('/:thoughtId/reactions', async(req,res)=> {
     try{
-        let thoughtData = await Thought.findOneAndUpdate({_id: req.params.thoughtId}, {$push: {reactions: req.body}}, {new: true})
-        res.status(200).json(thoughtData)
-    }
+        let newReaction = await Reaction.create(req.body);
+
+    let thoughtData = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      {
+        $push: { reactions: newReaction._id },
+      }
+    );
+    console.log(thoughtData);
+    res.status(200).json(thoughtData);    
+}
     catch(err){
         res.status(500).json(err)
     }
@@ -74,8 +82,16 @@ router.post('/:thoughtId/reactions', async(req,res)=> {
 //TODO: ROUTE TO DELETE A REACTION ON A THOUGHT
 router.delete('/:thoughtId/reactions/:reactionId', async (req,res)=> {
     try{
-        let thoughtData = await Thought.findOneAndUpdate({_id: req.params.thoughtId}, {$pull: {reactions: {reactionId: req.params.reactionId}}}, {new: true})
-        res.status(200).json(thoughtData)
+        let reaction = await Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            {
+              $pullAll: {
+                reactions: [{ _id: req.params.reactionId }],
+              },
+            }
+          );
+          console.log(reaction);
+        res.status(200).json(reaction)
     }
     catch(err){
         res.status(500).json(err)
