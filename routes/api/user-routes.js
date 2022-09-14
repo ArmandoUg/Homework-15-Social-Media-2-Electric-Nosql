@@ -3,8 +3,14 @@ const router = require('express').Router();
 const {User} = require("../../models")
 
 //TODO - ROUTE THAT GETS ALL THE USERS, include friends?
-router.get('/', (req,res)=> {
-
+router.get('/', async (req,res)=> {
+    try{
+        let userData = await User.find({})
+        res.status(200).json(userData)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
 })
 
 //TODO - ROUTE THAT CREATES A NEW USER

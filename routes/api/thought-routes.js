@@ -36,6 +36,7 @@ try{
 catch(err){
     res.status(500).json(err)
 }
+});
 
 //TODO: ROUTE TO UPDATE A THOUGHT
 router.put('/', async(req,res)=> {
@@ -49,18 +50,37 @@ router.put('/', async(req,res)=> {
 })
 
 //TODO: ROUTE TO DELETE A THOUGHT BASED ON THOUGHT ID
-router.delete('/:thoughtId', (req,res)=> {
-
+router.delete('/:thoughtId',async (req,res)=> {
+    try{
+        let thoughtData = await Thought.deleteOne({_id: req.params.thoughtId})
+        res.status(200).json(thoughtData)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
 });
 
 //TODO: ROUTE TO ADD REACTION TO A THOUGHT
-router.post('/:thoughtId/reactions', (req,res)=> {
-
+router.post('/:thoughtId/reactions', async(req,res)=> {
+    try{
+        let thoughtData = await Thought.findOneAndUpdate({_id: req.params.thoughtId}, {$push: {reactions: req.body}}, {new: true})
+        res.status(200).json(thoughtData)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
 });
 
 //TODO: ROUTE TO DELETE A REACTION ON A THOUGHT
-router.delete('/:thoughtId/reactions/:reactionId', (req,res)=> {
+router.delete('/:thoughtId/reactions/:reactionId', async (req,res)=> {
+    try{
+        let thoughtData = await Thought.findOneAndUpdate({_id: req.params.thoughtId}, {$pull: {reactions: {reactionId: req.params.reactionId}}}, {new: true})
+        res.status(200).json(thoughtData)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+});
 
-})
 
 module.exports = router;
