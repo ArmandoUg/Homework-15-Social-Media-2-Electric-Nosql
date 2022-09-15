@@ -53,7 +53,7 @@ router.put('/:thoughtId', async(req,res)=> {
 router.delete('/:thoughtId',async (req,res)=> {
     try{
         let thoughtData = await Thought.deleteOne({_id: req.params.thoughtId})
-        res.status(200).json(thoughtData)
+        res.status(200).json("Thought deleted")
     }
     catch(err){
         res.status(500).json(err)
@@ -91,7 +91,7 @@ router.delete('/:thoughtId/reactions/:reactionId', async (req,res)=> {
             }
           );
           console.log(reaction);
-        res.status(200).json(reaction)
+        res.status(200).json("Reaction deleted")
     }
     catch(err){
         res.status(500).json(err)
